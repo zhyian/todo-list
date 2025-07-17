@@ -25,16 +25,16 @@ registerBlockType( metadata.name, {
 				const target = event.target;
 				const isWithinNestedEditor = container.contains(target);
 
-				if (isWithinNestedEditor) {
-					const blockElement = target.closest('[data-block]');
-					if (blockElement) {
-						const blockId = blockElement.getAttribute('data-block');
-						selectionChange(
-							{ clientId: blockId, attributeKey: 'content', offset: 0 },
-							{ clientId: blockId, attributeKey: 'content', offset: 0 }
-						);
-					}
-				}
+				if (!isWithinNestedEditor) return;
+
+				const blockElement = target.closest('[data-block]');
+				if (!blockElement) return;
+
+				const blockId = blockElement.getAttribute('data-block');
+				if (!blockId) return;
+
+				// Set attributeKey to prevent block replacement
+				selectionChange(blockId, 'content');
 			};
 
 			container.addEventListener('paste', handlePaste, true);
